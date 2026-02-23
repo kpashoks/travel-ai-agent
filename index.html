@@ -335,7 +335,7 @@
         <li>Offline maps & tickets</li>
         <li>Priority support</li>
       </ul>
-      <a href="https://buy.stripe.com/dRm4gAbMl0BSgWu62I5c400" target="_blank" class="btn btn-primary plan-btn">Subscribe Now</a>
+      <a href="https://buy.stripe.com/dRm4gAbMl0BSgWu62I5c400" target="_blank" class="btn btn-primary plan-btn" id="voyagerBtn" data-monthly="https://buy.stripe.com/dRm4gAbMl0BSgWu62I5c400" data-annual="https://buy.stripe.com/cNi14obMlbgw35E62I5c403">Subscribe Now</a>
     </div>
     <!-- Business -->
     <div class="price-card">
@@ -349,7 +349,7 @@
         <li>API access</li>
         <li>Dedicated account manager</li>
       </ul>
-      <a href="https://buy.stripe.com/6oU3cw7w570gcGeeze5c401" target="_blank" class="btn btn-outline plan-btn">Start Enterprise</a>
+      <a href="https://buy.stripe.com/6oU3cw7w570gcGeeze5c401" target="_blank" class="btn btn-outline plan-btn" id="enterpriseBtn" data-monthly="https://buy.stripe.com/6oU3cw7w570gcGeeze5c401" data-annual="https://buy.stripe.com/cNidRa7w54S849IgHm5c402">Start Enterprise</a>
     </div>
   </div>
 </section>
@@ -483,6 +483,12 @@
     document.querySelectorAll('.plan-price[data-monthly]').forEach(el => {
       const price = type === 'annual' ? el.dataset.annual : el.dataset.monthly;
       el.innerHTML = `${price} <span class="period">/ mo</span>`;
+    });
+    // Update Stripe payment links based on billing toggle
+    document.querySelectorAll('[data-monthly][data-annual]').forEach(el => {
+      if (el.tagName === 'A') {
+        el.href = type === 'annual' ? el.dataset.annual : el.dataset.monthly;
+      }
     });
   }
 
