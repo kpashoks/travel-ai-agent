@@ -244,7 +244,7 @@
     <a href="#features">Features</a>
     <a href="#pricing">Pricing</a>
     <a href="#integration">Developers</a>
-    <a href="#" class="btn btn-primary" onclick="openModal('pro')">Get Started</a>
+    <a href="https://buy.stripe.com/dRm4gAbMl0BSgWu62I5c400" target="_blank" class="btn btn-primary">Get Started</a>
   </div>
 </nav>
 
@@ -321,7 +321,7 @@
         <li>Community recommendations</li>
         <li>Email support</li>
       </ul>
-      <button class="btn btn-outline plan-btn" onclick="openModal('free')">Get Started Free</button>
+      <button class="btn btn-outline plan-btn" onclick="openModal()">Get Started Free</button>
     </div>
     <!-- Pro -->
     <div class="price-card featured">
@@ -335,7 +335,7 @@
         <li>Offline maps & tickets</li>
         <li>Priority support</li>
       </ul>
-      <button class="btn btn-primary plan-btn" onclick="openModal('pro')">Subscribe Now</button>
+      <a href="https://buy.stripe.com/dRm4gAbMl0BSgWu62I5c400" target="_blank" class="btn btn-primary plan-btn">Subscribe Now</a>
     </div>
     <!-- Business -->
     <div class="price-card">
@@ -349,7 +349,7 @@
         <li>API access</li>
         <li>Dedicated account manager</li>
       </ul>
-      <button class="btn btn-outline plan-btn" onclick="openModal('enterprise')">Contact Sales</button>
+      <a href="https://buy.stripe.com/6oU3cw7w570gcGeeze5c401" target="_blank" class="btn btn-outline plan-btn">Start Enterprise</a>
     </div>
   </div>
 </section>
@@ -447,38 +447,27 @@
   <div class="footer-bottom">© 2026 Llama Inc. All rights reserved. Payments powered by Stripe.</div>
 </footer>
 
-<!-- CHECKOUT MODAL -->
+<!-- FREE SIGNUP MODAL -->
 <div class="modal-overlay" id="checkoutModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div id="checkoutForm">
-      <h2 id="modalTitle">Subscribe to Voyager</h2>
-      <div class="modal-sub" id="modalSub">$12/mo — Unlock unlimited AI-powered travel planning</div>
+      <h2>Start with Explorer</h2>
+      <div class="modal-sub">Free forever — no credit card needed</div>
       <div class="form-group">
         <label>Email</label>
         <input type="email" placeholder="you@example.com" id="emailInput">
       </div>
       <div class="form-group">
-        <label>Card Number</label>
-        <input type="text" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)">
+        <label>Password</label>
+        <input type="password" placeholder="Create a password">
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Expiry</label>
-          <input type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)">
-        </div>
-        <div class="form-group">
-          <label>CVC</label>
-          <input type="text" placeholder="123" maxlength="3">
-        </div>
-      </div>
-      <button class="btn btn-primary plan-btn" onclick="handleCheckout()" id="payBtn" style="margin-top:.5rem;">Subscribe &rarr;</button>
-      <div class="powered-by">Secured by <span>Stripe</span> 🔒</div>
+      <button class="btn btn-primary plan-btn" onclick="handleSignup()" id="payBtn" style="margin-top:.5rem;">Create Free Account &rarr;</button>
     </div>
     <div class="success-state" id="successState">
       <div class="success-icon">🎉</div>
       <h3>Welcome aboard!</h3>
-      <p>Your subscription is active. Check your email for a confirmation and getting-started guide.</p>
+      <p>Your free account is ready. Check your email to get started.</p>
       <button class="btn btn-primary" onclick="closeModal()" style="margin-top:1.5rem;">Start Planning &rarr;</button>
     </div>
   </div>
@@ -498,50 +487,26 @@
   }
 
   // Modal
-  const plans = {
-    free: { title: 'Start with Explorer', sub: 'Free forever — no credit card needed', btnText: 'Create Account', hideCard: true },
-    pro: { title: 'Subscribe to Voyager', sub: '$12/mo — Unlock unlimited AI-powered travel planning', btnText: 'Subscribe →' },
-    enterprise: { title: 'Contact Enterprise Sales', sub: '$39/mo — Full team & agency features', btnText: 'Start Trial →' }
-  };
-
-  function openModal(plan) {
-    const p = plans[plan] || plans.pro;
-    document.getElementById('modalTitle').textContent = p.title;
-    document.getElementById('modalSub').textContent = p.sub;
-    document.getElementById('payBtn').textContent = p.btnText;
+  function openModal() {
     document.getElementById('checkoutForm').style.display = 'block';
     document.getElementById('successState').className = 'success-state';
     document.getElementById('checkoutModal').classList.add('open');
-
-    // hide card fields for free plan
-    const cardFields = document.querySelectorAll('.form-row, .form-group:nth-child(2)');
   }
 
   function closeModal() {
     document.getElementById('checkoutModal').classList.remove('open');
   }
 
-  function handleCheckout() {
+  function handleSignup() {
     const btn = document.getElementById('payBtn');
-    btn.textContent = 'Processing...';
+    btn.textContent = 'Creating account...';
     btn.disabled = true;
     setTimeout(() => {
       document.getElementById('checkoutForm').style.display = 'none';
       document.getElementById('successState').className = 'success-state show';
-      btn.textContent = 'Subscribe →';
+      btn.textContent = 'Create Free Account →';
       btn.disabled = false;
     }, 1500);
-  }
-
-  // Card formatting
-  function formatCard(el) {
-    let v = el.value.replace(/\D/g, '').substring(0, 16);
-    el.value = v.replace(/(.{4})/g, '$1 ').trim();
-  }
-  function formatExpiry(el) {
-    let v = el.value.replace(/\D/g, '').substring(0, 4);
-    if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
-    el.value = v;
   }
 
   // Close modal on overlay click
