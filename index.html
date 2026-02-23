@@ -304,53 +304,11 @@
   <h2 class="section-title">Simple, transparent pricing</h2>
   <p class="section-sub" style="margin-left:auto;margin-right:auto;">Start free. Upgrade when you're ready. Cancel anytime.</p>
 
-  <div class="pricing-toggle">
-    <button class="active" onclick="toggleBilling(this, 'monthly')">Monthly</button>
-    <button onclick="toggleBilling(this, 'annual')">Annual <span style="color:var(--green); font-size:.75rem;">Save 20%</span></button>
-  </div>
-
-  <div class="pricing-grid">
-    <!-- Free -->
-    <div class="price-card">
-      <div class="plan-name">Explorer</div>
-      <div class="plan-price">$0 <span class="period">/ mo</span></div>
-      <div class="plan-desc">Perfect for casual travelers</div>
-      <ul class="plan-features">
-        <li>3 trips per month</li>
-        <li>Basic itinerary builder</li>
-        <li>Community recommendations</li>
-        <li>Email support</li>
-      </ul>
-      <button class="btn btn-outline plan-btn" onclick="openModal()">Get Started Free</button>
-    </div>
-    <!-- Pro -->
-    <div class="price-card featured">
-      <div class="plan-name">Voyager</div>
-      <div class="plan-price" data-monthly="$12" data-annual="$9">$12 <span class="period">/ mo</span></div>
-      <div class="plan-desc">For frequent travelers who want more</div>
-      <ul class="plan-features">
-        <li>Unlimited trips</li>
-        <li>AI-powered rebooking</li>
-        <li>Smart budget optimization</li>
-        <li>Offline maps & tickets</li>
-        <li>Priority support</li>
-      </ul>
-      <a href="https://buy.stripe.com/dRm4gAbMl0BSgWu62I5c400" target="_blank" class="btn btn-primary plan-btn" id="voyagerBtn" data-monthly="https://buy.stripe.com/dRm4gAbMl0BSgWu62I5c400" data-annual="https://buy.stripe.com/cNi14obMlbgw35E62I5c403">Subscribe Now</a>
-    </div>
-    <!-- Business -->
-    <div class="price-card">
-      <div class="plan-name">Enterprise</div>
-      <div class="plan-price" data-monthly="$39" data-annual="$29">$39 <span class="period">/ mo</span></div>
-      <div class="plan-desc">For teams and travel agencies</div>
-      <ul class="plan-features">
-        <li>Everything in Voyager</li>
-        <li>Group coordination (up to 50)</li>
-        <li>Custom branding</li>
-        <li>API access</li>
-        <li>Dedicated account manager</li>
-      </ul>
-      <a href="https://buy.stripe.com/6oU3cw7w570gcGeeze5c401" target="_blank" class="btn btn-outline plan-btn" id="enterpriseBtn" data-monthly="https://buy.stripe.com/6oU3cw7w570gcGeeze5c401" data-annual="https://buy.stripe.com/cNidRa7w54S849IgHm5c402">Start Enterprise</a>
-    </div>
+  <div style="max-width:960px; margin:0 auto;">
+    <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+    <stripe-pricing-table pricing-table-id="prctbl_1T46YWIKFhIdpur4t9tBV68y"
+    publishable-key="pk_live_51T3K3PIKFhIdpur4ZbZ386UwZl8A2TTLsrGcKnqTigNbHENtazMXZ38xax683E7UzRP2Ts9epLnRBx1ifIAZC1UQ0078HSm1Yw">
+    </stripe-pricing-table>
   </div>
 </section>
 
@@ -474,25 +432,7 @@
 </div>
 
 <script>
-  // Billing toggle
-  let billing = 'monthly';
-  function toggleBilling(btn, type) {
-    billing = type;
-    document.querySelectorAll('.pricing-toggle button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.plan-price[data-monthly]').forEach(el => {
-      const price = type === 'annual' ? el.dataset.annual : el.dataset.monthly;
-      el.innerHTML = `${price} <span class="period">/ mo</span>`;
-    });
-    // Update Stripe payment links based on billing toggle
-    document.querySelectorAll('[data-monthly][data-annual]').forEach(el => {
-      if (el.tagName === 'A') {
-        el.href = type === 'annual' ? el.dataset.annual : el.dataset.monthly;
-      }
-    });
-  }
-
-  // Modal
+  // Modal (free plan signup)
   function openModal() {
     document.getElementById('checkoutForm').style.display = 'block';
     document.getElementById('successState').className = 'success-state';
