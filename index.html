@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Llama Inc. — Your AI Travel Companion</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #06060a;
+    --surface: #0e0e14;
+    --surface2: #16161f;
+    --border: #1e1e2a;
+    --text: #e8e8ef;
+    --text-dim: #8888a0;
+    --accent: #7c5cfc;
+    --accent-light: #a78bfa;
+    --accent-glow: rgba(124,92,252,0.25);
+    --green: #34d399;
+    --amber: #fbbf24;
+    --rose: #fb7185;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(6,6,10,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { display: flex; align-items: center; gap: .6rem; font-weight: 800; font-size: 1.2rem; }
+  .logo svg { width: 32px; height: 32px; }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-links a { color: var(--text-dim); text-decoration: none; font-size: .9rem; font-weight: 500; transition: color .2s; }
+  .nav-links a:hover { color: var(--text); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    padding: .65rem 1.4rem; border-radius: 10px; font-weight: 600; font-size: .9rem;
+    text-decoration: none; cursor: pointer; border: none; transition: all .25s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #6a48e8; transform: translateY(-1px); box-shadow: 0 8px 30px var(--accent-glow); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent-light); }
+  .btn-ghost { background: rgba(255,255,255,.06); color: var(--text); }
+  .btn-ghost:hover { background: rgba(255,255,255,.1); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 8rem 2rem 4rem; position: relative;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 800px; border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none; animation: pulse 6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: .5; transform: translateX(-50%) scale(1); } 50% { opacity: .8; transform: translateX(-50%) scale(1.08); } }
+  .badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 100px;
+    padding: .4rem 1rem; font-size: .8rem; color: var(--text-dim); margin-bottom: 2rem;
+    position: relative; z-index: 1;
+  }
+  .badge span { color: var(--green); font-weight: 600; }
+  .hero h1 {
+    font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 900; line-height: 1.08;
+    letter-spacing: -.03em; max-width: 780px; position: relative; z-index: 1;
+  }
+  .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--accent-light), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { margin-top: 1.5rem; font-size: 1.15rem; color: var(--text-dim); max-width: 540px; position: relative; z-index: 1; }
+  .hero-cta { display: flex; gap: 1rem; margin-top: 2.5rem; position: relative; z-index: 1; flex-wrap: wrap; justify-content: center; }
+
+  /* ── FEATURES ── */
+  section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--accent-light); margin-bottom: .75rem; }
+  .section-title { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; letter-spacing: -.02em; margin-bottom: 1rem; }
+  .section-sub { color: var(--text-dim); max-width: 560px; font-size: 1.05rem; margin-bottom: 3rem; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .feature-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 2rem; transition: all .3s;
+  }
+  .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,.3); }
+  .feature-icon {
+    width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1.2rem;
+  }
+  .fi-purple { background: rgba(124,92,252,.15); }
+  .fi-green { background: rgba(52,211,153,.15); }
+  .fi-amber { background: rgba(251,191,36,.15); }
+  .fi-rose { background: rgba(251,113,133,.15); }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+  .feature-card p { color: var(--text-dim); font-size: .92rem; }
+
+  /* ── PRICING ── */
+  #pricing { text-align: center; }
+  .pricing-toggle { display: inline-flex; background: var(--surface); border-radius: 10px; padding: 4px; margin-bottom: 3rem; border: 1px solid var(--border); }
+  .pricing-toggle button {
+    padding: .55rem 1.3rem; border-radius: 8px; border: none; background: transparent;
+    color: var(--text-dim); font-weight: 600; font-size: .85rem; cursor: pointer; transition: all .2s;
+  }
+  .pricing-toggle button.active { background: var(--accent); color: #fff; }
+
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 960px; margin: 0 auto; }
+  .price-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 2.5rem 2rem; text-align: left; position: relative; transition: all .3s;
+  }
+  .price-card:hover { transform: translateY(-4px); }
+  .price-card.featured { border-color: var(--accent); box-shadow: 0 0 60px var(--accent-glow); }
+  .price-card.featured::before {
+    content: 'Most Popular'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #fff; font-size: .7rem; font-weight: 700; padding: .3rem 1rem;
+    border-radius: 100px; text-transform: uppercase; letter-spacing: .06em;
+  }
+  .plan-name { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); margin-bottom: .5rem; }
+  .plan-price { font-size: 3rem; font-weight: 900; letter-spacing: -.03em; }
+  .plan-price .period { font-size: .95rem; font-weight: 500; color: var(--text-dim); }
+  .plan-desc { color: var(--text-dim); font-size: .9rem; margin: .75rem 0 1.5rem; }
+  .plan-features { list-style: none; margin-bottom: 2rem; }
+  .plan-features li { padding: .45rem 0; font-size: .9rem; color: var(--text-dim); display: flex; align-items: center; gap: .6rem; }
+  .plan-features li::before { content: '✓'; color: var(--green); font-weight: 700; font-size: .85rem; }
+  .plan-btn { width: 100%; padding: .8rem; font-size: .95rem; }
+
+  /* ── INTEGRATION ── */
+  .integration-section { text-align: center; }
+  .code-window {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    max-width: 720px; margin: 0 auto; text-align: left; overflow: hidden;
+  }
+  .code-header {
+    display: flex; align-items: center; gap: .5rem; padding: .8rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .code-dot.r { background: #ff5f57; } .code-dot.y { background: #febc2e; } .code-dot.g { background: #28c840; }
+  .code-header span { margin-left: .8rem; font-size: .75rem; color: var(--text-dim); font-weight: 500; }
+  .code-body { padding: 1.5rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: .82rem; line-height: 1.8; overflow-x: auto; }
+  .code-body .kw { color: var(--accent-light); } .code-body .str { color: var(--green); }
+  .code-body .cm { color: var(--text-dim); font-style: italic; } .code-body .fn { color: var(--amber); }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .testimonial {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;
+  }
+  .testimonial .stars { color: var(--amber); font-size: .9rem; margin-bottom: 1rem; }
+  .testimonial blockquote { font-size: .95rem; color: var(--text-dim); margin-bottom: 1.2rem; font-style: italic; }
+  .testimonial .author { display: flex; align-items: center; gap: .75rem; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; }
+  .testimonial .name { font-weight: 600; font-size: .9rem; }
+  .testimonial .role { font-size: .8rem; color: var(--text-dim); }
+
+  /* ── CTA ── */
+  .cta-section {
+    text-align: center; padding: 5rem 2rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(124,92,252,.06) 50%, transparent 100%);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+  .cta-section h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; margin-bottom: 1rem; }
+  .cta-section p { color: var(--text-dim); max-width: 480px; margin: 0 auto 2rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    max-width: 1100px; margin: 0 auto; padding: 4rem 2rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { color: var(--text-dim); font-size: .85rem; margin-top: .75rem; max-width: 260px; }
+  .footer-col h4 { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--text-dim); margin-bottom: 1rem; }
+  .footer-col a { display: block; color: var(--text-dim); text-decoration: none; font-size: .88rem; padding: .25rem 0; transition: color .2s; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom { text-align: center; color: var(--text-dim); font-size: .78rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(8px);
+    z-index: 200; display: none; align-items: center; justify-content: center; padding: 2rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 2.5rem; max-width: 440px; width: 100%; position: relative;
+    animation: modalIn .3s ease;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(.97); } }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-dim); font-size: 1.3rem; cursor: pointer; }
+  .modal h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: .3rem; }
+  .modal .modal-sub { color: var(--text-dim); font-size: .88rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1.1rem; }
+  .form-group label { display: block; font-size: .8rem; font-weight: 600; color: var(--text-dim); margin-bottom: .4rem; }
+  .form-group input {
+    width: 100%; padding: .7rem 1rem; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); font-size: .9rem; outline: none; transition: border-color .2s;
+  }
+  .form-group input:focus { border-color: var(--accent); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  .powered-by { text-align: center; margin-top: 1.2rem; font-size: .75rem; color: var(--text-dim); }
+  .powered-by span { font-weight: 700; }
+
+  .success-state { display: none; text-align: center; padding: 1rem 0; }
+  .success-state.show { display: block; }
+  .success-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .success-state h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: .5rem; }
+  .success-state p { color: var(--text-dim); font-size: .9rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links a:not(.btn) { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" fill="#7c5cfc" opacity=".15"/><path d="M10 22V14c0-3.3 2.7-6 6-6s6 2.7 6 6v8" stroke="#7c5cfc" stroke-width="2.5" stroke-linecap="round"/><circle cx="12.5" cy="16" r="1.5" fill="#a78bfa"/><circle cx="19.5" cy="16" r="1.5" fill="#a78bfa"/><path d="M8 13c-1-1.5-1-4 1-5M24 13c1-1.5 1-4-1-5" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"/></svg>
+    Llama Inc.
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#integration">Developers</a>
+    <a href="#" class="btn btn-primary" onclick="openModal('pro')">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">🌍 <span>12,000+</span> travelers trust Llama</div>
+  <h1>Plan your dream trip with <em>AI precision</em></h1>
+  <p>Llama builds personalized itineraries in seconds — flights, hotels, activities, and local gems, all tailored to your style and budget.</p>
+  <div class="hero-cta">
+    <a href="#pricing" class="btn btn-primary" style="padding:.8rem 2rem; font-size:1rem;">View Plans &rarr;</a>
+    <a href="#features" class="btn btn-outline" style="padding:.8rem 2rem; font-size:1rem;">See How It Works</a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything you need, nothing you don't</h2>
+  <p class="section-sub">Our AI travel assistant handles the complexity so you can focus on the excitement.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon fi-purple">🤖</div>
+      <h3>AI Itinerary Builder</h3>
+      <p>Describe your ideal trip in plain language. Llama generates a day-by-day itinerary optimized for time, budget, and your interests.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">💰</div>
+      <h3>Smart Budget Tracking</h3>
+      <p>Set a budget and Llama automatically finds the best combinations of flights, stays, and activities that fit within it.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-amber">🔄</div>
+      <h3>Real-Time Rebooking</h3>
+      <p>Flight delayed? Plans change? Llama monitors your trip and suggests instant alternatives so nothing is wasted.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-rose">🌐</div>
+      <h3>Local Insights</h3>
+      <p>Get recommendations from locals and seasoned travelers — hidden restaurants, secret viewpoints, and off-the-beaten-path experiences.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-green">👥</div>
+      <h3>Group Coordination</h3>
+      <p>Traveling with friends? Llama syncs everyone's preferences and availability into one shared, editable itinerary.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon fi-purple">📱</div>
+      <h3>Offline Access</h3>
+      <p>Download your full itinerary, maps, and tickets for offline use. No Wi-Fi needed at your destination.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Simple, transparent pricing</h2>
+  <p class="section-sub" style="margin-left:auto;margin-right:auto;">Start free. Upgrade when you're ready. Cancel anytime.</p>
+
+  <div class="pricing-toggle">
+    <button class="active" onclick="toggleBilling(this, 'monthly')">Monthly</button>
+    <button onclick="toggleBilling(this, 'annual')">Annual <span style="color:var(--green); font-size:.75rem;">Save 20%</span></button>
+  </div>
+
+  <div class="pricing-grid">
+    <!-- Free -->
+    <div class="price-card">
+      <div class="plan-name">Explorer</div>
+      <div class="plan-price">$0 <span class="period">/ mo</span></div>
+      <div class="plan-desc">Perfect for casual travelers</div>
+      <ul class="plan-features">
+        <li>3 trips per month</li>
+        <li>Basic itinerary builder</li>
+        <li>Community recommendations</li>
+        <li>Email support</li>
+      </ul>
+      <button class="btn btn-outline plan-btn" onclick="openModal('free')">Get Started Free</button>
+    </div>
+    <!-- Pro -->
+    <div class="price-card featured">
+      <div class="plan-name">Voyager</div>
+      <div class="plan-price" data-monthly="$12" data-annual="$9">$12 <span class="period">/ mo</span></div>
+      <div class="plan-desc">For frequent travelers who want more</div>
+      <ul class="plan-features">
+        <li>Unlimited trips</li>
+        <li>AI-powered rebooking</li>
+        <li>Smart budget optimization</li>
+        <li>Offline maps & tickets</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="btn btn-primary plan-btn" onclick="openModal('pro')">Subscribe Now</button>
+    </div>
+    <!-- Business -->
+    <div class="price-card">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price" data-monthly="$39" data-annual="$29">$39 <span class="period">/ mo</span></div>
+      <div class="plan-desc">For teams and travel agencies</div>
+      <ul class="plan-features">
+        <li>Everything in Voyager</li>
+        <li>Group coordination (up to 50)</li>
+        <li>Custom branding</li>
+        <li>API access</li>
+        <li>Dedicated account manager</li>
+      </ul>
+      <button class="btn btn-outline plan-btn" onclick="openModal('enterprise')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATION -->
+<section id="integration" class="integration-section">
+  <div class="section-label">Easy Integration</div>
+  <h2 class="section-title">Collect payments with Stripe</h2>
+  <p class="section-sub" style="margin-left:auto;margin-right:auto;">Add subscriptions to your app with just a few lines of code. Stripe handles billing, invoices, and compliance worldwide.</p>
+  <div class="code-window">
+    <div class="code-header">
+      <div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div>
+      <span>checkout.js</span>
+    </div>
+    <div class="code-body">
+<span class="cm">// Create a Stripe Checkout session for subscriptions</span><br>
+<span class="kw">const</span> session = <span class="kw">await</span> stripe.checkout.sessions.<span class="fn">create</span>({<br>
+&nbsp;&nbsp;mode: <span class="str">'subscription'</span>,<br>
+&nbsp;&nbsp;line_items: [{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;price: <span class="str">'price_voyager_monthly'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;quantity: <span class="str">1</span>,<br>
+&nbsp;&nbsp;}],<br>
+&nbsp;&nbsp;success_url: <span class="str">'https://llama.inc/welcome'</span>,<br>
+&nbsp;&nbsp;cancel_url: <span class="str">'https://llama.inc/pricing'</span>,<br>
+});<br><br>
+<span class="cm">// Redirect to Stripe's hosted checkout page</span><br>
+<span class="fn">redirect</span>(session.url);
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-label">Testimonials</div>
+  <h2 class="section-title">Loved by travelers worldwide</h2>
+  <p class="section-sub">Here's what our community has to say.</p>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Llama planned a 2-week Japan trip that would've taken me days to research. Every restaurant, every train — perfect."</blockquote>
+      <div class="author">
+        <div class="avatar" style="background:rgba(124,92,252,.2); color:var(--accent-light);">SR</div>
+        <div><div class="name">Sarah R.</div><div class="role">Solo Traveler</div></div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <blockquote>"We use Llama for our entire team's business travel. The group coordination feature alone saves us 10+ hours a week."</blockquote>
+      <div class="author">
+        <div class="avatar" style="background:rgba(52,211,153,.2); color:var(--green);">MK</div>
+        <div><div class="name">Marcus K.</div><div class="role">Head of Operations, TechCorp</div></div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <blockquote>"The rebooking feature saved our honeymoon when our flight got cancelled. Had new flights within minutes."</blockquote>
+      <div class="author">
+        <div class="avatar" style="background:rgba(251,191,36,.2); color:var(--amber);">JL</div>
+        <div><div class="name">Jenna L.</div><div class="role">Voyager Subscriber</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Ready to travel smarter?</h2>
+  <p>Join 12,000+ travelers who plan better trips in less time. Start for free — no credit card required.</p>
+  <a href="#pricing" class="btn btn-primary" style="padding:.85rem 2.5rem; font-size:1rem;">Get Started Free &rarr;</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <svg viewBox="0 0 32 32" fill="none" width="28" height="28"><circle cx="16" cy="16" r="15" fill="#7c5cfc" opacity=".15"/><path d="M10 22V14c0-3.3 2.7-6 6-6s6 2.7 6 6v8" stroke="#7c5cfc" stroke-width="2.5" stroke-linecap="round"/><circle cx="12.5" cy="16" r="1.5" fill="#a78bfa"/><circle cx="19.5" cy="16" r="1.5" fill="#a78bfa"/></svg>
+        Llama Inc.
+      </div>
+      <p>AI-powered travel planning for everyone. Built with ❤ for explorers.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#">Changelog</a><a href="#">API Docs</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a><a href="#">Blog</a><a href="#">Careers</a><a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Llama Inc. All rights reserved. Payments powered by Stripe.</div>
+</footer>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="checkoutForm">
+      <h2 id="modalTitle">Subscribe to Voyager</h2>
+      <div class="modal-sub" id="modalSub">$12/mo — Unlock unlimited AI-powered travel planning</div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" id="emailInput">
+      </div>
+      <div class="form-group">
+        <label>Card Number</label>
+        <input type="text" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Expiry</label>
+          <input type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)">
+        </div>
+        <div class="form-group">
+          <label>CVC</label>
+          <input type="text" placeholder="123" maxlength="3">
+        </div>
+      </div>
+      <button class="btn btn-primary plan-btn" onclick="handleCheckout()" id="payBtn" style="margin-top:.5rem;">Subscribe &rarr;</button>
+      <div class="powered-by">Secured by <span>Stripe</span> 🔒</div>
+    </div>
+    <div class="success-state" id="successState">
+      <div class="success-icon">🎉</div>
+      <h3>Welcome aboard!</h3>
+      <p>Your subscription is active. Check your email for a confirmation and getting-started guide.</p>
+      <button class="btn btn-primary" onclick="closeModal()" style="margin-top:1.5rem;">Start Planning &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Billing toggle
+  let billing = 'monthly';
+  function toggleBilling(btn, type) {
+    billing = type;
+    document.querySelectorAll('.pricing-toggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.plan-price[data-monthly]').forEach(el => {
+      const price = type === 'annual' ? el.dataset.annual : el.dataset.monthly;
+      el.innerHTML = `${price} <span class="period">/ mo</span>`;
+    });
+  }
+
+  // Modal
+  const plans = {
+    free: { title: 'Start with Explorer', sub: 'Free forever — no credit card needed', btnText: 'Create Account', hideCard: true },
+    pro: { title: 'Subscribe to Voyager', sub: '$12/mo — Unlock unlimited AI-powered travel planning', btnText: 'Subscribe →' },
+    enterprise: { title: 'Contact Enterprise Sales', sub: '$39/mo — Full team & agency features', btnText: 'Start Trial →' }
+  };
+
+  function openModal(plan) {
+    const p = plans[plan] || plans.pro;
+    document.getElementById('modalTitle').textContent = p.title;
+    document.getElementById('modalSub').textContent = p.sub;
+    document.getElementById('payBtn').textContent = p.btnText;
+    document.getElementById('checkoutForm').style.display = 'block';
+    document.getElementById('successState').className = 'success-state';
+    document.getElementById('checkoutModal').classList.add('open');
+
+    // hide card fields for free plan
+    const cardFields = document.querySelectorAll('.form-row, .form-group:nth-child(2)');
+  }
+
+  function closeModal() {
+    document.getElementById('checkoutModal').classList.remove('open');
+  }
+
+  function handleCheckout() {
+    const btn = document.getElementById('payBtn');
+    btn.textContent = 'Processing...';
+    btn.disabled = true;
+    setTimeout(() => {
+      document.getElementById('checkoutForm').style.display = 'none';
+      document.getElementById('successState').className = 'success-state show';
+      btn.textContent = 'Subscribe →';
+      btn.disabled = false;
+    }, 1500);
+  }
+
+  // Card formatting
+  function formatCard(el) {
+    let v = el.value.replace(/\D/g, '').substring(0, 16);
+    el.value = v.replace(/(.{4})/g, '$1 ').trim();
+  }
+  function formatExpiry(el) {
+    let v = el.value.replace(/\D/g, '').substring(0, 4);
+    if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+    el.value = v;
+  }
+
+  // Close modal on overlay click
+  document.getElementById('checkoutModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+
+</body>
+</html>
